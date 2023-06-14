@@ -42,20 +42,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  doctor:
+                  doctors:
                     type: array
                     items:
                       $ref: '#/components/schemas/doctor_profile_summary'
 
-        404:
-          description: Doctor with id not found
+        401:
+          description: Not Authenticated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-        401:
-          description: Not Authenticated
 
 
   /doctors/{doctorId}:
@@ -87,50 +84,18 @@ paths:
 
         401:
           description: Not Authenticated
-
-
-
-  /doctors/{doctorId}/appointments:
-    get:
-      tags:
-        - Doctor
-      summary: Get a list of all upcoming appointments for the doctor
-      parameters:
-        - name: doctorId
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: date
-          in: query
-          schema:
-            type: string
-            example: 2023-05-26
-
-      responses:
-        200:
-          description: Successfully return a list of appointments for the doctor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/appointment'
-
-        404:
-          description: Doctor with id not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
 
-        401:
-          description: Not Authenticated
 
 
   /doctors/{doctorId}/patients:
     get:
       tags:
         - Doctor
-      summary: Get a list of all patients
+      summary: Get a list of all patients associated with the doctor
       parameters:
         - name: doctorId
           in: path
@@ -159,6 +124,10 @@ paths:
 
         401:
           description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 
   #PATIENT API'S
@@ -191,42 +160,10 @@ paths:
 
         401:
           description: Not Authenticated
-
-
-  /patients/{patientId}/appointments:
-    get:
-      tags:
-        - Patient
-      summary: Get a list of all upcoming appointments for the patient
-      parameters:
-        - name: patientId
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: date
-          in: query
-          schema:
-            type: string
-            example: 2023-05-26
-
-      responses:
-        200:
-          description: Successfully return a list of appointments for the patient
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/appointment'
-
-        404:
-          description: Record with id not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
-        401:
-          description: Not Authenticated
 
 
   /patients/{patientId}/medical-record:
@@ -262,6 +199,10 @@ paths:
 
         401:
           description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 
     post:
@@ -295,7 +236,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-                
+
   /patients/{patientId}/expenses:
     get:
       tags:
@@ -307,12 +248,12 @@ paths:
           required: true
           schema:
             type: integer
-      
+
       responses:
         200:
           description: Returns a object with list of user expenses
           content:
-            applicaiton/json:
+            application/json:
               schema:
                 type: object
                 properties:
@@ -320,7 +261,7 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/expense'
-                      
+
         404:
           description: Patient not found
           content:
@@ -334,8 +275,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-                
-    
+
+
     post:
       tags:
         - Patient
@@ -350,11 +291,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/post_expense'
-      
+
       responses:
         201:
           description: Successfully added the expense to the user
-        
+
         404:
           description: Patient not found
           content:
@@ -395,6 +336,54 @@ paths:
 
         401:
           description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+    get:
+      tags:
+        - Appointment
+      summary: Get an appointment for a specific doctor / patient
+      parameters:
+        - name: doctorId
+          in: query
+          schema:
+            type: integer
+
+        - name: patientId
+          in: query
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Successfully returned the appointments of the queried id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  appointments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/appointment'
+
+        404:
+          description: Queried id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+        401:
+          description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 
 
   /appointments/{appointmentId}:
@@ -475,14 +464,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-    
+
   #Expense API
   /expenses/{expenseId}:
     get:
-      tags: 
+      tags:
         - Expense
       summary: Returns a specific expense
-      parameters: 
+      parameters:
         - name: expenseId
           in: path
           required: true
@@ -496,7 +485,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/expense'
-                
+
         404:
           description: Expense not found
           content:
@@ -512,10 +501,10 @@ paths:
                 $ref: '#/components/schemas/error'
     
     put:
-      tags: 
+      tags:
         - Expense
       summary: Updates a specific expense
-      parameters: 
+      parameters:
         - name: expenseId
           in: path
           required: true
@@ -529,7 +518,7 @@ paths:
       responses:
         200:
           description: Successfully updated a expense
-                
+
         404:
           description: Expense not found
           content:
@@ -669,7 +658,7 @@ components:
           type: string
         dosage:
           type: integer
-        total: 
+        total:
           type: integer
 
     #Medical Record Schema  
@@ -717,7 +706,7 @@ components:
           type: string
         paid:
           type: boolean
-        
+
 
     #SUMMARY SCHEMAS
     
@@ -788,7 +777,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/prescription_post'
-        
+
     #POST prescription
     prescription_post:
       type: object
@@ -801,9 +790,9 @@ components:
           type: string
         dosage:
           type: integer
-        total: 
+        total:
           type: integer
-          
+
     
     post_expense:
       type: object
