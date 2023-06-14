@@ -1,19 +1,19 @@
 CREATE TABLE doctor (
-    id SERIAL NOT NULL PRIMARY KEY,
-    username varchar (50),
-    email varchar(100),
-    phone_number BIGINT,
-    skills varchar(30) ARRAY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    username VARCHAR (50),
+    email VARCHAR(100),
+    phone_number VARCHAR(10),
+    skills VARCHAR(30) ARRAY,
     biography TEXT,
-    department varchar(40)
+    department VARCHAR(40)
 );
 
 CREATE TABLE patient (
-    id SERIAL NOT NULL PRIMARY KEY,
-    username varchar(50),
-    address varchar (100),
-    phone_number BIGINT,
-    email varchar (50),
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    username VARCHAR(50),
+    address VARCHAR (100),
+    phone_number VARCHAR(10),
+    email VARCHAR (50),
     age INTEGER,
     blood_group VARCHAR(3),
     religion VARCHAR(20),
@@ -26,18 +26,18 @@ CREATE TABLE patient (
 CREATE TABLE availability (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     doctor_id BIGSERIAL NOT NULL, --Rel
-    day_of_week varchar(10),
-    start_time varchar(10),
-    end_time varchar(10)
+    day_of_week VARCHAR(10),
+    start_time TIME,
+    end_time TIME
 );
 
 CREATE TABLE appointment (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     doctor_id BIGSERIAL NOT NULL, --Rel
     patient_id BIGSERIAL NOT NULL, --Rel
-    _date DATE,
-    start_time varchar(5),
-    end_time varchar(5),
+    appointment_date DATE,
+    start_time TIME,
+    end_time TIME,
     reason TEXT,
     medical_id BIGSERIAL
 );
@@ -45,7 +45,7 @@ CREATE TABLE appointment (
 CREATE TABLE prescription (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     medical_id BIGSERIAL NOT NULL, --Rel
-    medication varchar (40),
+    medication VARCHAR (40),
     start_date DATE,
     end_date DATE,
     dosage integer,
@@ -58,16 +58,17 @@ CREATE TABLE medical_record (
     patient_id BIGSERIAL NOT NULL, --Rel
     appointment_id BIGSERIAL NOT NULL, --Rel
     check_in_date DATE,
-    disease varchar(40),
-    status varchar(15),
-    room_no varchar(6)
+    notes TEXT,
+    disease VARCHAR(40),
+    status VARCHAR(15),
+    room_no VARCHAR(6)
 );
 
 CREATE TABLE expense (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     user_id BIGSERIAL, --Rel
-    name varchar(30),
-    category varchar(30),
+    name VARCHAR(30),
+    category VARCHAR(30),
     description TEXT,
     amount DOUBLE PRECISION,
     date_of_expense DATE,
