@@ -732,10 +732,10 @@ components:
           type: string
         description:
           type: string
-        appointments: #Relationship
-          type: array
-          items:
-            $ref: '#/components/schemas/appointment'
+#        appointments: #Relationship
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/appointment'
 
     #Prescription Schema
     prescription:

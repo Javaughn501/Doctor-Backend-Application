@@ -39,12 +39,12 @@ CREATE TABLE appointment (
     start_time TIME,
     end_time TIME,
     reason TEXT,
-    medical_id BIGSERIAL
+    medical_record_id BIGSERIAL
 );
 
 CREATE TABLE prescription (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    medical_id BIGSERIAL NOT NULL, --Rel
+    medical_record_id BIGSERIAL NOT NULL, --Rel
     medication VARCHAR (40),
     start_date DATE,
     end_date DATE,
@@ -66,7 +66,7 @@ CREATE TABLE medical_record (
 
 CREATE TABLE expense (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    user_id BIGSERIAL, --Rel
+    patient_id BIGSERIAL, --Rel
     name VARCHAR(30),
     category VARCHAR(30),
     description TEXT,
@@ -79,12 +79,12 @@ ALTER TABLE availability ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERE
 
 ALTER TABLE appointment ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id),
                         ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id),
-                        ADD CONSTRAINT fk_medical FOREIGN KEY (medical_id) REFERENCES medical_record(id);
+                        ADD CONSTRAINT fk_medical FOREIGN KEY (medical_record_id) REFERENCES medical_record(id);
 
-ALTER TABLE prescription ADD CONSTRAINT fk_medical FOREIGN KEY (medical_id) REFERENCES medical_record(id);
+ALTER TABLE prescription ADD CONSTRAINT fk_medical FOREIGN KEY (medical_record_id) REFERENCES medical_record(id);
 
 ALTER TABLE medical_record ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id),
                            ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id),
                            ADD CONSTRAINT fk_appointment FOREIGN KEY (appointment_id) REFERENCES appointment(id);
 
-ALTER TABLE expense ADD CONSTRAINT fk_patient FOREIGN KEY (user_id) REFERENCES patient(id);
+ALTER TABLE expense ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id);
