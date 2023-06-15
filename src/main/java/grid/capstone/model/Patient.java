@@ -28,6 +28,10 @@ public class Patient {
     private String maritialStatus;
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
 }

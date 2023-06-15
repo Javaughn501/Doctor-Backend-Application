@@ -20,7 +20,8 @@ CREATE TABLE patient (
     occupation VARCHAR(30),
     gender CHAR(1),
     maritial_status VARCHAR(10),
-    description TEXT
+    description TEXT,
+    doctor_id BIGSERIAL
 );
 
 CREATE TABLE availability (
@@ -74,6 +75,8 @@ CREATE TABLE expense (
     date_of_expense DATE,
     paid BOOLEAN
 );
+
+ALTER TABLE patient ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id);
 
 ALTER TABLE availability ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id) ON DELETE CASCADE;
 
