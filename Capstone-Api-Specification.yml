@@ -900,9 +900,3 @@ components:
           type: string
         amount:
           type: number
-        
-        
-        
-        
-        
-  
