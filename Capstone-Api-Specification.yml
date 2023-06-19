@@ -17,7 +17,7 @@ paths:
           in: query
           schema:
             type: string
-        - name: location
+        - name: department
           in: query
           schema:
             type: string
@@ -25,7 +25,7 @@ paths:
           in: query
           schema:
             type: string
-        - name: limit
+        - name: size
           in: query
           schema:
             type: integer
@@ -673,6 +673,8 @@ components:
         phone_number:
           type: integer
         biography:
+          type: string
+        specialization:
           type: string
         skills:
           type: array

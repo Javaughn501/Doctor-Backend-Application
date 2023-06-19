@@ -3,6 +3,7 @@ CREATE TABLE doctor (
     username VARCHAR (50),
     email VARCHAR(100),
     phone_number VARCHAR(10),
+    specialization VARCHAR(30),
     skills VARCHAR(30) ARRAY,
     biography TEXT,
     department VARCHAR(40)
