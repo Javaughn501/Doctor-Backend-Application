@@ -23,7 +23,7 @@ public class DoctorSpecification {
      */
     public static Specification<Doctor> hasSpecialization(String specialization) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(
+                criteriaBuilder.equal(
                         criteriaBuilder.lower(root.get("specialization")),
                         specialization.toLowerCase()
                 );
@@ -39,7 +39,7 @@ public class DoctorSpecification {
      */
     public static Specification<Doctor> inDepartment(String department) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(
+                criteriaBuilder.equal(
                         criteriaBuilder.lower(root.get("department")),
                         department.toLowerCase()
                 );
@@ -55,7 +55,7 @@ public class DoctorSpecification {
      */
     public static Specification<Doctor> hasName(String username) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(
+                criteriaBuilder.equal(
                         criteriaBuilder.lower(root.get("username")),
                         username.toLowerCase()
                 );

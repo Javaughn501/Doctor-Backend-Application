@@ -2,6 +2,7 @@ package grid.capstone.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  */
 
 @Data
+@ToString(exclude = {"appointments"})
 @Entity
 public class Patient {
     @Id
@@ -25,7 +27,7 @@ public class Patient {
     private String religion;
     private String occupation;
     private Character gender;
-    private String maritialStatus;
+    private String maritalStatus;
     private String description;
 
     @ManyToOne
@@ -34,4 +36,7 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
+
+    @OneToMany(mappedBy = "patient")
+    private List<MedicalRecord> medicalRecords;
 }

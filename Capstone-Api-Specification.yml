@@ -192,6 +192,47 @@ paths:
                 $ref: '#/components/schemas/error'
 
 
+    post:
+      tags:
+        - Patient
+      summary: Create a new patient for a specific doctor
+      parameters:
+        - name: doctorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/post_patient'
+
+      responses:
+        201:
+          description: Record successfully created
+        404:
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+        401:
+          description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
 
   #APPOINTMENT API
   /appointments:
@@ -712,6 +753,8 @@ components:
       properties:
         id:
           type: integer
+        doctor_id:
+          type: integer
         name:
           type: string
         address:
@@ -734,10 +777,10 @@ components:
           type: string
         description:
           type: string
-#        appointments: #Relationship
-#          type: array
-#          items:
-#            $ref: '#/components/schemas/appointment'
+    #        appointments: #Relationship
+    #          type: array
+    #          items:
+    #            $ref: '#/components/schemas/appointment'
 
     #Prescription Schema
     prescription:
@@ -890,7 +933,7 @@ components:
         total:
           type: integer
 
-    
+
     post_expense:
       type: object
       properties:
@@ -902,6 +945,32 @@ components:
           type: string
         amount:
           type: number
+
+    post_patient:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone_number:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        blood_group:
+          type: string
+        religion:
+          type: string
+        occupation:
+          type: string
+        gender:
+          type: string
+        martial_status:
+          type: string
+        description:
+          type: string
         
         
         

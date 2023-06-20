@@ -1,7 +1,12 @@
 package grid.capstone.service.patient;
 
+import grid.capstone.dto.v1.PatientDTO;
+import grid.capstone.mapper.PatientMapper;
+import grid.capstone.model.Doctor;
 import grid.capstone.model.Patient;
+import grid.capstone.repository.DoctorRepository;
 import grid.capstone.repository.PatientRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,9 +20,13 @@ import java.util.Optional;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientMapper patientMapper;
 
-    public PatientServiceImpl(PatientRepository patientRepository) {
+    public PatientServiceImpl(PatientRepository patientRepository, DoctorRepository doctorRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.patientMapper = patientMapper;
     }
 
     @Override
@@ -27,5 +36,27 @@ public class PatientServiceImpl implements PatientService {
         Optional<Patient> patientOptional = patientRepository.findById(patientId);
 
         return patientOptional.orElse(new Patient());
+    }
+
+    @Override
+    public HttpStatus savePatient(PatientDTO patientDTO, Long doctorId) {
+        //Check if doctor exists
+        doctorRepository.existsById(doctorId);
+        //TODO: Throw exception if doctor doesnt exists.
+
+
+
+        //TODO: Sanitize input
+        //TODO: Throw Exception if patient email exists
+        Patient patient = patientMapper.toEntity(patientDTO);
+        patient.setDoctor(
+                Doctor.builder()
+                        .id(doctorId)
+                        .build()
+        );
+
+        patientRepository.save(patient);
+
+        return HttpStatus.CREATED;
     }
 }

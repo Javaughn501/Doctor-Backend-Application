@@ -1,11 +1,11 @@
 package grid.capstone.controller;
 
+import grid.capstone.dto.v1.PatientDTO;
 import grid.capstone.model.Patient;
 import grid.capstone.service.patient.PatientService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Javaughn Stephenson
@@ -26,5 +26,15 @@ public class PatientController {
     public Patient getPatient(@PathVariable Long patientId) {
         return patientService.getPatient(patientId);
     }
+
+    @PostMapping("/{doctorId}")
+    public ResponseEntity<HttpStatus> postPatient(@PathVariable Long doctorId,
+                                                  @RequestBody PatientDTO patientDTO
+                                                  ) {
+        return ResponseEntity
+                .status(patientService.savePatient(patientDTO, doctorId))
+                .build();
+    }
+
 
 }

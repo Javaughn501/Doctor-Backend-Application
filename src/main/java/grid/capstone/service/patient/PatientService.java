@@ -1,6 +1,8 @@
 package grid.capstone.service.patient;
 
+import grid.capstone.dto.v1.PatientDTO;
 import grid.capstone.model.Patient;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Javaughn Stephenson
@@ -19,4 +21,5 @@ public interface PatientService {
      */
     Patient getPatient(Long patientId);
 
+    HttpStatus savePatient(PatientDTO patientDTO, Long doctorId);
 }

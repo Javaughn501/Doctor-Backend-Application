@@ -1,9 +1,7 @@
 package grid.capstone.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,8 +11,10 @@ import java.util.List;
  */
 
 @Data
+@ToString(exclude = {"availabilities"})
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class Doctor {
 

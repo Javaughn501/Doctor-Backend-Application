@@ -23,11 +23,6 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @GetMapping("/{doctorId}")
-    public Doctor getDoctor(@PathVariable Long doctorId) {
-        return doctorService.getDoctor(doctorId);
-    }
-
     @GetMapping
     Page<DoctorDTO> getAllDoctors(
             @RequestParam Optional<String> specialization,
@@ -40,5 +35,12 @@ public class DoctorController {
                 specialization, department, name, size, page
         );
     }
+
+    @GetMapping("/{doctorId}")
+    public Doctor getDoctor(@PathVariable Long doctorId) {
+        return doctorService.getDoctor(doctorId);
+    }
+
+
 
 }

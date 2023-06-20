@@ -20,7 +20,7 @@ CREATE TABLE patient (
     religion VARCHAR(20),
     occupation VARCHAR(30),
     gender CHAR(1),
-    maritial_status VARCHAR(10),
+    marital_status VARCHAR(10),
     description TEXT,
     doctor_id BIGSERIAL
 );
