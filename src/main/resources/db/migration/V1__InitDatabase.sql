@@ -58,7 +58,7 @@ CREATE TABLE medical_record (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     doctor_id BIGSERIAL NOT NULL, --Rel
     patient_id BIGSERIAL NOT NULL, --Rel
-    appointment_id BIGSERIAL NOT NULL, --Rel
+    appointment_id BIGSERIAL, --Rel
     check_in_date DATE,
     notes TEXT,
     disease VARCHAR(40),
@@ -92,3 +92,6 @@ ALTER TABLE medical_record ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFE
                            ADD CONSTRAINT fk_appointment FOREIGN KEY (appointment_id) REFERENCES appointment(id);
 
 ALTER TABLE expense ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id);
+
+ALTER TABLE appointment ALTER COLUMN medical_record_id DROP NOT NULL;
+ALTER TABLE medical_record ALTER COLUMN appointment_id DROP NOT NULL;

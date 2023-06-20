@@ -48,6 +48,9 @@ public class PatientServiceImpl implements PatientService {
 
         //TODO: Sanitize input
         //TODO: Throw Exception if patient email exists
+
+        //Mapping the DTO to the entity and setting the doctor
+        //to the entity
         Patient patient = patientMapper.toEntity(patientDTO);
         patient.setDoctor(
                 Doctor.builder()
