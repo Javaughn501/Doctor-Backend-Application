@@ -4,7 +4,6 @@ import grid.capstone.dto.v1.DoctorDTO;
 import grid.capstone.mapper.DoctorMapper;
 import grid.capstone.model.Doctor;
 import grid.capstone.repository.DoctorRepository;
-import grid.capstone.specification.DoctorSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

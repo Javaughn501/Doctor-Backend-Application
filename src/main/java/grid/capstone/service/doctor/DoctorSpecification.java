@@ -1,4 +1,4 @@
-package grid.capstone.specification;
+package grid.capstone.service.doctor;
 
 import grid.capstone.model.Doctor;
 import org.springframework.data.jpa.domain.Specification;

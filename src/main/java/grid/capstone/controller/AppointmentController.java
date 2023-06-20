@@ -1,13 +1,16 @@
 package grid.capstone.controller;
 
 import grid.capstone.dto.v1.AppointmentDTO;
+import grid.capstone.model.Appointment;
 import grid.capstone.service.appointment.AppointmentService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Javaughn Stephenson
@@ -29,6 +32,15 @@ public class AppointmentController {
         return ResponseEntity
                 .status(appointmentService.createAppointment(appointmentDTO))
                 .build();
+    }
+
+    @GetMapping
+    public List<Appointment> getAllAppointments(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate>  dateFilter,
+            @RequestParam Optional<Long> patientId,
+            @RequestParam Optional<Long> doctorId
+    ) {
+        return appointmentService.getAllAppointments(dateFilter, patientId, doctorId);
     }
 
 }
