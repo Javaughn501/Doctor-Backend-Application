@@ -1,5 +1,6 @@
 package grid.capstone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Javaughn Stephenson
@@ -34,9 +36,13 @@ public class MedicalRecord {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
+    @JsonIgnore
     private Patient patient;
 
     @OneToOne
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
+
+    @OneToMany(mappedBy = "medicalRecord")
+    private List<Prescription> prescriptions;
 }

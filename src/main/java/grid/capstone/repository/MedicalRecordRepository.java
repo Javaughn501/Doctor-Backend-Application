@@ -1,8 +1,11 @@
 package grid.capstone.repository;
 
 import grid.capstone.model.MedicalRecord;
+import grid.capstone.model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author Javaughn Stephenson
@@ -11,4 +14,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long> {
+    List<MedicalRecord> findAllByPatient(Patient build);
 }

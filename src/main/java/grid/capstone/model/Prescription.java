@@ -1,10 +1,12 @@
 package grid.capstone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDate;
 
@@ -28,6 +30,8 @@ public class Prescription {
     private Integer dosage;
     private Double total;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "medical_record_id")
+    @JsonIgnore
     private MedicalRecord medicalRecord;
 }

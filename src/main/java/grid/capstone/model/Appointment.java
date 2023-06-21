@@ -38,6 +38,7 @@ public class Appointment {
     private Patient patient;
 
     @OneToOne
+    @JsonIgnore
     private MedicalRecord medicalRecord;
 
 }
