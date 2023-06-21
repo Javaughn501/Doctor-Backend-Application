@@ -43,4 +43,14 @@ public class AppointmentController {
         return appointmentService.getAllAppointments(dateFilter, patientId, doctorId);
     }
 
+    @PutMapping("/{appointmentId}")
+    public ResponseEntity<HttpStatus> updateAppointment(
+            @PathVariable Long appointmentId,
+            @RequestBody AppointmentDTO appointmentDTO
+    ) {
+        return ResponseEntity
+                .status(appointmentService.updateAppointment(appointmentId, appointmentDTO))
+                .build();
+    }
+
 }

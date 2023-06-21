@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author Javaughn Stephenson
@@ -43,24 +45,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
 
-        //TODO: Throw Exception if not exists
-        List<Appointment> patientAppointments = appointmentRepository.findByPatient(Patient.builder().id(appointmentDTO.getPatientId()).build());
-        List<Appointment> doctorAppointments = appointmentRepository.findByDoctor(Doctor.builder().id(appointmentDTO.getDoctorId()).build());
-
-
-        //Check if any existing appointments is clashing with the new one
-        boolean patientMatch = patientAppointments.stream()
-                .filter(app -> app.getAppointmentDate().equals(appointment.getAppointmentDate()))
-                .anyMatch(app -> isAppointmentClashing(app, appointment));
-
-        boolean doctorMatch = doctorAppointments.stream()
-                .filter(app -> app.getAppointmentDate().equals(appointment.getAppointmentDate()))
-                .anyMatch(app -> isAppointmentClashing(app, appointment));
-
-
-        //If any matches, return a conflict
-        if (patientMatch || doctorMatch)
+        /*
+        If any appointment has a conflict then return conflict
+         */
+        if (Boolean.TRUE.equals(hasAppointmentConflict(appointment))){
             return HttpStatus.CONFLICT;
+        }
 
         appointmentRepository.save(appointment);
 
@@ -71,6 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAllAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId) {
 
+        //Add the date filter if client added in req param
         Specification<Appointment> appointmentSpecification =
                 Specification
                         .where(dateFilter
@@ -78,6 +69,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                                 .orElse(null)
                         );
 
+        //If doctor id is present filter based off the doctor id if not patient
+        //To avoid
         if (doctorId.isPresent())
             appointmentSpecification = appointmentSpecification
                     .and(doctorId
@@ -105,21 +98,76 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
 
+    @Override
+    public HttpStatus updateAppointment(Long appointmentId, AppointmentDTO appointmentDTO) {
+
+        //TODO: Sanitize input
+        Appointment updatedAppointment = appointmentMapper.toEntity(appointmentDTO);
 
 
+        //TODO: Add exception handling when id is not found
+        Appointment appointment = appointmentRepository.findById(appointmentId).get();
 
 
+        //Update Values in the object if not null
+        updateObject(updatedAppointment.getAppointmentDate(), appointment::setAppointmentDate);
+        updateObject(updatedAppointment.getStartTime(), appointment::setStartTime);
+        updateObject(updatedAppointment.getEndTime(), appointment::setEndTime);
+        updateObject(updatedAppointment.getReason(), appointment::setReason);
+        updateObject(updatedAppointment.getMedicalRecord(), appointment::setMedicalRecord);
+
+        System.out.println(appointment);
+
+        if (Boolean.TRUE.equals(hasAppointmentConflict(appointment))){
+            return HttpStatus.CONFLICT;
+        }
 
 
+        appointmentRepository.save(appointment);
+
+        return HttpStatus.OK;
+    }
 
 
+    private Boolean hasAppointmentConflict(Appointment appointment) {
+
+        //TODO: Throw Exception if not exists
+        List<Appointment> patientAppointments = appointmentRepository.findByPatient(appointment.getPatient());
+        List<Appointment> doctorAppointments = appointmentRepository.findByDoctor(appointment.getDoctor());
 
 
+        //Check if any existing appointments is clashing with the new one
+        boolean patientMatch = patientAppointments.stream()
+                .filter(app -> !Objects.equals(app.getId(), appointment.getId()))
+                .filter(app -> app.getAppointmentDate().equals(appointment.getAppointmentDate()))
+                .anyMatch(app -> isAppointmentClashing(app, appointment));
+
+        boolean doctorMatch = doctorAppointments.stream()
+                .filter(app -> !Objects.equals(app.getId(), appointment.getId()))
+                .filter(app -> app.getAppointmentDate().equals(appointment.getAppointmentDate()))
+                .anyMatch(app -> isAppointmentClashing(app, appointment));
+
+        /*
+        If any is true, there's a conflict in the appointment
+        Only return false when both are false.
+         */
+        return patientMatch || doctorMatch;
+    }
 
     //Checks to see if any conflict between two given appointments
     private Boolean isAppointmentClashing(Appointment appointment1, Appointment appointment2) {
         return appointment1.getStartTime().isBefore(appointment2.getEndTime())
                 && appointment2.getStartTime().isBefore(appointment1.getEndTime());
+    }
+
+    /*Method is used when updating object, it takes the
+    new value and the setter consumer, and if object is not null
+    use the setter method to update the value
+     */
+    private <T> void updateObject(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 
 }

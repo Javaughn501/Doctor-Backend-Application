@@ -20,7 +20,7 @@ public interface AppointmentService {
      * Creates a new appointment between the doctor and patient
      *
      * @param appointmentDTO DTO for the appointment object
-     * @return
+     * @return HttpStatus code
      */
     HttpStatus createAppointment(AppointmentDTO appointmentDTO);
 
@@ -29,11 +29,21 @@ public interface AppointmentService {
      * Returns the upcoming appointments of either the patient
      * or the doctor
      *
-     * @param dateFilter
-     * @param patientId
-     * @param doctorId
-     * @return
+     * @param dateFilter date which to filter the results by
+     * @param patientId id of the patient with appointments
+     * @param doctorId id of the doctor with appointments
+     * @return List of appointments
      */
     List<Appointment> getAllAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId);
+
+
+    /**
+     * Updates an existing appointment
+     *
+     * @param appointmentId appointment id
+     * @param appointmentDTO appointment object with updated values
+     * @return HttpStatus code
+     */
+    HttpStatus updateAppointment(Long appointmentId, AppointmentDTO appointmentDTO);
 }
 
