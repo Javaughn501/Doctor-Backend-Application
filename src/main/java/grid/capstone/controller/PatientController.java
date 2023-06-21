@@ -3,9 +3,12 @@ package grid.capstone.controller;
 import grid.capstone.dto.v1.PatientDTO;
 import grid.capstone.model.Patient;
 import grid.capstone.service.patient.PatientService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Javaughn Stephenson
@@ -22,6 +25,12 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @GetMapping
+    public List<Patient> getAllPatients(@RequestParam(required = true) Long doctorId) {
+        return patientService.getAllPatients(doctorId);
+    }
+
+
     @GetMapping("/{patientId}")
     public Patient getPatient(@PathVariable Long patientId) {
         return patientService.getPatient(patientId);
@@ -35,6 +44,7 @@ public class PatientController {
                 .status(patientService.savePatient(patientDTO, doctorId))
                 .build();
     }
+
 
 
 }

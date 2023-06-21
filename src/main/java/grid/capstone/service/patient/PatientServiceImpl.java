@@ -9,6 +9,7 @@ import grid.capstone.repository.PatientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,5 +62,13 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.save(patient);
 
         return HttpStatus.CREATED;
+    }
+
+    @Override
+    public List<Patient> getAllPatients(Long doctorId) {
+        //TODO: throw exception if doctorId doesnt exists
+
+        return patientRepository
+                .findAllByDoctor(Doctor.builder().id(doctorId).build());
     }
 }
