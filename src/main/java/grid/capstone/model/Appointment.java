@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.function.Consumer;
 
 /**
  * @author Javaughn Stephenson
@@ -40,5 +41,20 @@ public class Appointment {
     @OneToOne
     @JsonIgnore
     private MedicalRecord medicalRecord;
+
+
+    public void updateObject(Appointment appointment) {
+        updateHelper(appointment.getAppointmentDate(), this::setAppointmentDate);
+        updateHelper(appointment.getStartTime(), this::setStartTime);
+        updateHelper(appointment.getEndTime(), this::setEndTime);
+        updateHelper(appointment.getReason(), this::setReason);
+        updateHelper(appointment.getMedicalRecord(), this::setMedicalRecord);
+    }
+
+    private <T> void updateHelper(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
 
 }

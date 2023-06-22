@@ -1,11 +1,11 @@
 package grid.capstone.controller;
 
+import grid.capstone.dto.v1.MedicalRecordDTO;
 import grid.capstone.model.MedicalRecord;
 import grid.capstone.service.medicalRecord.MedicalRecordService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +27,28 @@ public class MedicalRecordController {
     @GetMapping("/{patientId}")
     public List<MedicalRecord> getMedicalRecords(@PathVariable Long patientId) {
         return medicalService.getMedicalRecords(patientId);
+    }
+
+    @PostMapping("/{patientId}")
+    public ResponseEntity<HttpStatus> createMedicalRecord(
+            @PathVariable Long patientId,
+            @RequestBody MedicalRecordDTO medicalRecordDTO
+    ) {
+
+        return ResponseEntity
+                .status(medicalService.createMedicalRecord(patientId, medicalRecordDTO))
+                .build();
+    }
+
+    @PutMapping("/{recordId}")
+    public ResponseEntity<HttpStatus> updateMedicalRecord(
+            @PathVariable Long recordId,
+            @RequestBody MedicalRecordDTO medicalRecordDTO
+    ) {
+
+        return ResponseEntity
+                .status(medicalService.updateMedicalRecord(recordId, medicalRecordDTO))
+                .build();
     }
 
 

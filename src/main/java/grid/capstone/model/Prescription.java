@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDate;
+import java.util.function.Consumer;
 
 /**
  * @author Javaughn Stephenson
@@ -34,4 +35,19 @@ public class Prescription {
     @JoinColumn(name = "medical_record_id")
     @JsonIgnore
     private MedicalRecord medicalRecord;
+
+
+    public void updateObject(Prescription prescription) {
+        updateHelper(prescription.getMedication(), this::setMedication);
+        updateHelper(prescription.getStartDate(), this::setStartDate);
+        updateHelper(prescription.getEndDate(), this::setEndDate);
+        updateHelper(prescription.getDosage(), this::setDosage);
+        updateHelper(prescription.getTotal(), this::setTotal);
+    }
+
+    private <T> void updateHelper(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
 }

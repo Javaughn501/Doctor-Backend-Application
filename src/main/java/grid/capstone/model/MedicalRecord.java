@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Javaughn Stephenson
@@ -45,4 +46,18 @@ public class MedicalRecord {
 
     @OneToMany(mappedBy = "medicalRecord")
     private List<Prescription> prescriptions;
+
+    public void updateObject(MedicalRecord medicalRecord) {
+        updateHelper(medicalRecord.getCheckInDate(), this::setCheckInDate);
+        updateHelper(medicalRecord.getNotes(), this::setNotes);
+        updateHelper(medicalRecord.getDisease(), this::setDisease);
+        updateHelper(medicalRecord.getStatus(), this::setStatus);
+        updateHelper(medicalRecord.getRoomNo(), this::setRoomNo);
+    }
+
+    private <T> void updateHelper(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
 }

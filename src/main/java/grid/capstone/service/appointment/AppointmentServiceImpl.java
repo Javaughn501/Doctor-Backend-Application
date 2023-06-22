@@ -3,9 +3,6 @@ package grid.capstone.service.appointment;
 import grid.capstone.dto.v1.AppointmentDTO;
 import grid.capstone.mapper.AppointmentMapper;
 import grid.capstone.model.Appointment;
-import grid.capstone.model.Doctor;
-import grid.capstone.model.MedicalRecord;
-import grid.capstone.model.Patient;
 import grid.capstone.repository.AppointmentRepository;
 import grid.capstone.repository.DoctorRepository;
 import grid.capstone.repository.PatientRepository;
@@ -17,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * @author Javaughn Stephenson
@@ -110,13 +106,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
         //Update Values in the object if not null
-        updateObject(updatedAppointment.getAppointmentDate(), appointment::setAppointmentDate);
-        updateObject(updatedAppointment.getStartTime(), appointment::setStartTime);
-        updateObject(updatedAppointment.getEndTime(), appointment::setEndTime);
-        updateObject(updatedAppointment.getReason(), appointment::setReason);
-        updateObject(updatedAppointment.getMedicalRecord(), appointment::setMedicalRecord);
-
-        System.out.println(appointment);
+        appointment.updateObject(updatedAppointment);
 
         if (Boolean.TRUE.equals(hasAppointmentConflict(appointment))){
             return HttpStatus.CONFLICT;
@@ -158,16 +148,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private Boolean isAppointmentClashing(Appointment appointment1, Appointment appointment2) {
         return appointment1.getStartTime().isBefore(appointment2.getEndTime())
                 && appointment2.getStartTime().isBefore(appointment1.getEndTime());
-    }
-
-    /*Method is used when updating object, it takes the
-    new value and the setter consumer, and if object is not null
-    use the setter method to update the value
-     */
-    private <T> void updateObject(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 
 }
