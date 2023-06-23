@@ -191,6 +191,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 
   #APPOINTMENT API
@@ -736,7 +742,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/appointment'
-    
+
     #Prescription Schema
     prescription:
       type: object
@@ -756,7 +762,7 @@ components:
         total:
           type: integer
 
-    #Medical Record Schema  
+    #Medical Record Schema
     medical_record:
       type: object
       properties:
@@ -780,7 +786,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/prescription'
-    
+
     #Expense Schema
     expense:
       type: object
@@ -804,7 +810,7 @@ components:
 
 
     #SUMMARY SCHEMAS
-    
+
     #Doctor Summary Schema - Return a limited fields when listing all objects
     doctor_profile_summary:
       type: object
@@ -817,7 +823,7 @@ components:
           type: string
         biography:
           type: string
-    
+
     #Patient Summary Schema - Return a limited fields when listing all patients belonging to a doctor
     patient_profile_summary:
       type: object
@@ -828,10 +834,10 @@ components:
           type: string
         medical:
           $ref: '#/components/schemas/medical_record'
-    
-    
+
+
     #POST SCHEMAS
-    
+
     #POST Appointment Schema
     post_appointment:
       type: object
