@@ -66,7 +66,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense getExpense(Long expenseId) {
         //TODO: Throw exception when id isnt found
-        return expenseRepository.findById(expenseId).orElse(new Expense());
+        return expenseRepository.findById(expenseId).orElse(null);
     }
 
     @Override

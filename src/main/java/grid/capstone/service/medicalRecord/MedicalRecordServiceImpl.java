@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * @author Javaughn Stephenson
@@ -76,83 +73,4 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
         return HttpStatus.CREATED;
     }
-
-    @Override
-    public HttpStatus updateMedicalRecord(Long recordId, MedicalRecordDTO medicalRecordDTO) {
-
-        MedicalRecord updatedMedicalRecord = medicalMapper.toEntity(medicalRecordDTO);
-
-        //TODO: Throw Exception when id is not found
-        MedicalRecord medicalRecord = medicalRepository.findById(recordId).get();
-
-        //Update the existing entity with the new fields
-        medicalRecord.updateObject(updatedMedicalRecord);
-
-        //List of the updated prescriptions - Updated the medical record incase any new
-        //Prescriptions were added
-        List<Prescription> updatedPrescriptions = updatedMedicalRecord.getPrescriptions().stream()
-                .map(prescription -> {
-                    prescription.setMedicalRecord(medicalRecord);
-                    return prescription;
-                })
-                .toList();
-
-        if (!updatedPrescriptions.isEmpty()) {
-
-            //Get the prescriptions that exists in the DB
-            List<Prescription> existingPrescriptions = prescriptionRepository.findAllById(
-                    updatedMedicalRecord.getPrescriptions().stream()
-                            .map(Prescription::getId)
-                            .toList()
-            );
-
-
-            //Save the updated prescriptions
-            prescriptionRepository.saveAll(
-                updatePrescriptions(
-                        updatedPrescriptions,
-                        existingPrescriptions
-                )
-            );
-
-        }
-
-        return HttpStatus.OK;
-    }
-
-
-    /*
-    Method is used to update the prescriptions in the medical record when a
-    put request with the updated medical records has been sent
-     */
-    private List<Prescription> updatePrescriptions(
-            List<Prescription> updatedPrescriptions,
-            List<Prescription> existingPrescriptions
-            ) {
-
-
-        //Update the prescriptions that exists in the DB
-        existingPrescriptions = existingPrescriptions.stream()
-                //Updating the prescriptions that exists
-                .map(prescription -> {
-                    //Getting the updated prescription from the list
-                    Optional<Prescription> optional = updatedPrescriptions.stream().filter(updated -> updated.getId().equals(prescription.getId())).findFirst();
-                    if (optional.isPresent()) {
-                        //Updating the prescription that was retrieved from the database
-                        prescription.updateObject(optional.get());
-                    }
-                    return prescription;
-                })
-                .toList();
-
-        //New Prescriptions that don't exist in the database as yet
-        List<Prescription> newPrescriptions = updatedPrescriptions.stream()
-                .filter(Predicate.not(existingPrescriptions::contains))
-                .toList();
-
-        return Stream.concat(existingPrescriptions.stream(), newPrescriptions.stream())
-                .toList();
-
-    }
-
 }

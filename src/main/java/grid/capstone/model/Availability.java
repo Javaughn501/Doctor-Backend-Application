@@ -26,6 +26,6 @@ public class Availability {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private Doctor doctor;
 }

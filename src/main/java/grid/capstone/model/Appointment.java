@@ -6,7 +6,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.function.Consumer;
+
+import static grid.capstone.util.UpdateUtil.updateHelper;
 
 /**
  * @author Javaughn Stephenson
@@ -49,12 +50,6 @@ public class Appointment {
         updateHelper(appointment.getEndTime(), this::setEndTime);
         updateHelper(appointment.getReason(), this::setReason);
         updateHelper(appointment.getMedicalRecord(), this::setMedicalRecord);
-    }
-
-    private <T> void updateHelper(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 
 }

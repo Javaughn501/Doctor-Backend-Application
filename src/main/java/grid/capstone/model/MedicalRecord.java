@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Consumer;
+
+import static grid.capstone.util.UpdateUtil.updateHelper;
 
 /**
  * @author Javaughn Stephenson
@@ -44,7 +45,7 @@ public class MedicalRecord {
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
 
-    @OneToMany(mappedBy = "medicalRecord")
+    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.PERSIST)
     private List<Prescription> prescriptions;
 
     public void updateObject(MedicalRecord medicalRecord) {
@@ -53,11 +54,5 @@ public class MedicalRecord {
         updateHelper(medicalRecord.getDisease(), this::setDisease);
         updateHelper(medicalRecord.getStatus(), this::setStatus);
         updateHelper(medicalRecord.getRoomNo(), this::setRoomNo);
-    }
-
-    private <T> void updateHelper(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 }

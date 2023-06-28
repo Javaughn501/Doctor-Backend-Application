@@ -35,7 +35,7 @@ public class DoctorServiceImpl implements DoctorService {
         //TODO: Add exception handling when id is not found
         Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
 
-        return doctorOptional.orElse(new Doctor());
+        return doctorOptional.orElse(null);
     }
 
 

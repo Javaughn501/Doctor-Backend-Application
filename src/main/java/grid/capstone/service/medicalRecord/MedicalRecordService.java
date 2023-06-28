@@ -29,15 +29,4 @@ public interface MedicalRecordService {
      * @return HttpStatus
      */
     HttpStatus createMedicalRecord(Long patientId, MedicalRecordDTO medicalRecordDTO);
-
-
-    /**
-     * Update a specific medical record
-     *
-     * @param recordId medical record id
-     * @param medicalRecordDTO medical record dto object with updated values
-     * @return HttpStatus code
-     */
-    HttpStatus updateMedicalRecord(Long recordId, MedicalRecordDTO medicalRecordDTO);
-
 }

@@ -1,7 +1,6 @@
 package grid.capstone.service.appointment;
 
 import grid.capstone.model.Appointment;
-import grid.capstone.model.Doctor;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;

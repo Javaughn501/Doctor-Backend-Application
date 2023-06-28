@@ -36,7 +36,7 @@ public class PatientServiceImpl implements PatientService {
         //TODO: Add exception handling when id is not found
         Optional<Patient> patientOptional = patientRepository.findById(patientId);
 
-        return patientOptional.orElse(new Patient());
+        return patientOptional.orElse(null);
     }
 
     @Override

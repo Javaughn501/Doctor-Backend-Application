@@ -29,6 +29,6 @@ public class Doctor {
     private String biography;
     private String department;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Availability> availabilities;
 }

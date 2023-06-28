@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDate;
-import java.util.function.Consumer;
+
+import static grid.capstone.util.UpdateUtil.updateHelper;
 
 /**
  * @author Javaughn Stephenson
@@ -45,9 +45,4 @@ public class Prescription {
         updateHelper(prescription.getTotal(), this::setTotal);
     }
 
-    private <T> void updateHelper(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
 }

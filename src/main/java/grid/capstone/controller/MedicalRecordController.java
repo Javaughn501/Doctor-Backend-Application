@@ -39,17 +39,4 @@ public class MedicalRecordController {
                 .status(medicalService.createMedicalRecord(patientId, medicalRecordDTO))
                 .build();
     }
-
-    @PutMapping("/{recordId}")
-    public ResponseEntity<HttpStatus> updateMedicalRecord(
-            @PathVariable Long recordId,
-            @RequestBody MedicalRecordDTO medicalRecordDTO
-    ) {
-
-        return ResponseEntity
-                .status(medicalService.updateMedicalRecord(recordId, medicalRecordDTO))
-                .build();
-    }
-
-
 }

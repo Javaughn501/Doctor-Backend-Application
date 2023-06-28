@@ -8,7 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.function.Consumer;
+
+import static grid.capstone.util.UpdateUtil.updateHelper;
 
 /**
  * @author Javaughn Stephenson
@@ -45,10 +46,5 @@ public class Expense {
         updateHelper(expense.getPaid(), this::setPaid);
     }
 
-    private <T> void updateHelper(T value, Consumer<T> setter) {
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
 
 }
