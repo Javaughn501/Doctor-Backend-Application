@@ -35,12 +35,12 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public List<Appointment> getAllAppointments(
+    public List<Appointment> getFilteredAppointments(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate>  dateFilter,
             @RequestParam Optional<Long> patientId,
             @RequestParam Optional<Long> doctorId
     ) {
-        return appointmentService.getAllAppointments(dateFilter, patientId, doctorId);
+        return appointmentService.getFilteredAppointments(dateFilter, patientId, doctorId);
     }
 
     @PutMapping("/{appointmentId}")

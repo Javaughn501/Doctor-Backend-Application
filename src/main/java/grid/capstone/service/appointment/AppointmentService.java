@@ -3,7 +3,6 @@ package grid.capstone.service.appointment;
 import grid.capstone.dto.v1.AppointmentDTO;
 import grid.capstone.model.Appointment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +33,7 @@ public interface AppointmentService {
      * @param doctorId id of the doctor with appointments
      * @return List of appointments
      */
-    List<Appointment> getAllAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId);
+    List<Appointment> getFilteredAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId);
 
 
     /**

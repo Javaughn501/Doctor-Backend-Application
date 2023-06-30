@@ -51,7 +51,7 @@ CREATE TABLE prescription (
     start_date DATE,
     end_date DATE,
     dosage integer,
-    total DOUBLE PRECISION
+    total NUMERIC
 );
 
 CREATE TABLE medical_record (
@@ -72,7 +72,7 @@ CREATE TABLE expense (
     name VARCHAR(30),
     category VARCHAR(30),
     description TEXT,
-    amount DOUBLE PRECISION,
+    amount NUMERIC,
     date_of_expense DATE,
     paid BOOLEAN
 );
@@ -85,7 +85,8 @@ ALTER TABLE appointment ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFEREN
                         ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id),
                         ADD CONSTRAINT fk_medical FOREIGN KEY (medical_record_id) REFERENCES medical_record(id);
 
-ALTER TABLE prescription ADD CONSTRAINT fk_medical FOREIGN KEY (medical_record_id) REFERENCES medical_record(id);
+ALTER TABLE prescription ADD CONSTRAINT fk_medical FOREIGN KEY (medical_record_id) REFERENCES medical_record(id)
+ON UPDATE CASCADE;
 
 ALTER TABLE medical_record ADD CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor(id),
                            ADD CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES patient(id),

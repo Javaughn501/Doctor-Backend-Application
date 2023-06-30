@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static grid.capstone.util.UpdateUtil.updateHelper;
@@ -29,9 +30,9 @@ public class Prescription {
     private LocalDate startDate;
     private LocalDate endDate;
     private Integer dosage;
-    private Double total;
+    private BigDecimal total;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "medical_record_id")
     @JsonIgnore
     private MedicalRecord medicalRecord;

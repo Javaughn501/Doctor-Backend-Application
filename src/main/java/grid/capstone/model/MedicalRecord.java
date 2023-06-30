@@ -45,7 +45,7 @@ public class MedicalRecord {
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
 
-    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.ALL)
     private List<Prescription> prescriptions;
 
     public void updateObject(MedicalRecord medicalRecord) {

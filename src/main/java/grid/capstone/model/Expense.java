@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static grid.capstone.util.UpdateUtil.updateHelper;
@@ -28,7 +29,7 @@ public class Expense {
     private String name;
     private String category;
     private String description;
-    private Double amount;
+    private BigDecimal amount;
     private LocalDate dateOfExpense;
     private Boolean paid;
 

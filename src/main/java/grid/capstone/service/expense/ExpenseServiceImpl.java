@@ -37,8 +37,8 @@ public class ExpenseServiceImpl implements ExpenseService {
         //TODO: Throw exception when id is not found
 
 
-        return expenseRepository.findAllByPatient(
-                Patient.builder().id(patientId).build()
+        return expenseRepository.findAllByPatientId(
+                patientId
         );
     }
 

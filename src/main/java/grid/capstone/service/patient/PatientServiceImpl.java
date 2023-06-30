@@ -69,6 +69,6 @@ public class PatientServiceImpl implements PatientService {
         //TODO: throw exception if doctorId doesnt exists
 
         return patientRepository
-                .findAllByDoctor(Doctor.builder().id(doctorId).build());
+                .findAllByDoctorId(doctorId);
     }
 }

@@ -55,7 +55,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public List<Appointment> getAllAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId) {
+    public List<Appointment> getFilteredAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId) {
+        //TODO: Throw error if atleast one id is not entered
 
         //Add the date filter if client added in req param
         Specification<Appointment> appointmentSpecification =
@@ -63,32 +64,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .where(dateFilter
                                 .map(AppointmentSpecification::hasDate)
                                 .orElse(null)
+                        )
+                        .and(doctorId
+                                .map(AppointmentSpecification::hasDoctor)
+                                .orElse(null)
+                        )
+                        .and(patientId
+                                .map(AppointmentSpecification::hasPatient)
+                                .orElse(null)
                         );
-
-        //If doctor id is present filter based off the doctor id if not patient
-        //To avoid
-        if (doctorId.isPresent())
-            appointmentSpecification = appointmentSpecification
-                    .and(doctorId
-                            .map(AppointmentSpecification::hasDoctor)
-                            .orElse(null)
-                    )
-                    .and((root, query, criteriaBuilder) ->
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    root.get("appointmentDate"),
-                                    LocalDate.now()
-                            )
-                    );
-        else if(patientId.isPresent())
-            appointmentSpecification = appointmentSpecification
-                    .and(patientId
-                            .map(AppointmentSpecification::hasPatient)
-                            .orElse(null)
-                    );
-        //TODO: Throw error if one is not entered
-
-
-
 
         return appointmentRepository.findAll(appointmentSpecification);
     }
