@@ -1,6 +1,8 @@
 package grid.capstone.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,10 +24,16 @@ public class Availability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Day of week is required")
     private String dayOfWeek;
+
+    @NotNull(message = "Start time is required")
     private LocalTime startTime;
+
+    @NotNull(message = "End time is required")
     private LocalTime endTime;
 
-    @ManyToOne()
+    @ManyToOne
     private Doctor doctor;
 }

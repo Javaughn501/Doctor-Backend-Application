@@ -1,6 +1,7 @@
 package grid.capstone.service.doctor;
 
 import grid.capstone.dto.v1.DoctorDTO;
+import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.DoctorMapper;
 import grid.capstone.model.Doctor;
 import grid.capstone.repository.DoctorRepository;
@@ -33,9 +34,8 @@ public class DoctorServiceImpl implements DoctorService {
     public Doctor getDoctor(Long doctorId) {
 
         //TODO: Add exception handling when id is not found
-        Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
-
-        return doctorOptional.orElse(null);
+        return doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor with id " + doctorId + " does not exist"));
     }
 
 

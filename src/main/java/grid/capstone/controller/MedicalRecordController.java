@@ -3,6 +3,7 @@ package grid.capstone.controller;
 import grid.capstone.dto.v1.MedicalRecordDTO;
 import grid.capstone.model.MedicalRecord;
 import grid.capstone.service.medicalRecord.MedicalRecordService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class MedicalRecordController {
     @PostMapping("/{patientId}")
     public ResponseEntity<HttpStatus> createMedicalRecord(
             @PathVariable Long patientId,
-            @RequestBody MedicalRecordDTO medicalRecordDTO
+            @Valid @RequestBody MedicalRecordDTO medicalRecordDTO
     ) {
 
         return ResponseEntity

@@ -2,6 +2,9 @@ package grid.capstone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,10 +29,17 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name of expense is required")
     private String name;
     private String category;
     private String description;
+
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount should be positive")
     private BigDecimal amount;
+
+    @NotNull(message = "Date of expense is required")
     private LocalDate dateOfExpense;
     private Boolean paid;
 

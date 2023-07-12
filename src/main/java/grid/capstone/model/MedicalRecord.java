@@ -2,6 +2,9 @@ package grid.capstone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,10 +29,15 @@ public class MedicalRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "Check in date is required")
+    @PastOrPresent(message = "Check in date cannot be in the future")
     private LocalDate checkInDate;
     private String notes;
     private String disease;
     private String status;
+
+    @NotBlank(message = "Room number is required")
     private String roomNo;
 
     @ManyToOne

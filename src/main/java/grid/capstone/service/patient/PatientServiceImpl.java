@@ -1,6 +1,7 @@
 package grid.capstone.service.patient;
 
 import grid.capstone.dto.v1.PatientDTO;
+import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.PatientMapper;
 import grid.capstone.model.Doctor;
 import grid.capstone.model.Patient;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Javaughn Stephenson
@@ -33,22 +33,22 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatient(Long patientId) {
 
-        //TODO: Add exception handling when id is not found
-        Optional<Patient> patientOptional = patientRepository.findById(patientId);
 
-        return patientOptional.orElse(null);
+        return patientRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient with id " + patientId + " does not exist"));
     }
 
     @Override
     public HttpStatus savePatient(PatientDTO patientDTO, Long doctorId) {
         //Check if doctor exists
-        doctorRepository.existsById(doctorId);
-        //TODO: Throw exception if doctor doesnt exists.
+        if (doctorId != null && !doctorRepository.existsById(doctorId)) {
+            throw new ResourceNotFoundException("Doctor with id " + doctorId + " does not exist");
+        }
 
+        if (patientRepository.existsByEmail(patientDTO.getEmail())) {
+            throw new ResourceNotFoundException("Email already exists");
+        }
 
-
-        //TODO: Sanitize input
-        //TODO: Throw Exception if patient email exists
 
         //Mapping the DTO to the entity and setting the doctor
         //to the entity
@@ -66,7 +66,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<Patient> getAllPatients(Long doctorId) {
-        //TODO: throw exception if doctorId doesnt exists
+        if (!doctorRepository.existsById(doctorId)) {
+            throw new ResourceNotFoundException("Doctor with id " + doctorId + " does not exist");
+        }
+
 
         return patientRepository
                 .findAllByDoctorId(doctorId);

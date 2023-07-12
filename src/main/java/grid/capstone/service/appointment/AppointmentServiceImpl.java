@@ -1,6 +1,8 @@
 package grid.capstone.service.appointment;
 
 import grid.capstone.dto.v1.AppointmentDTO;
+import grid.capstone.exception.AppointmentConflictException;
+import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.AppointmentMapper;
 import grid.capstone.model.Appointment;
 import grid.capstone.repository.AppointmentRepository;
@@ -37,15 +39,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public HttpStatus createAppointment(AppointmentDTO appointmentDTO) {
-        //TODO:Sanitize Input
 
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
+
+        if (!patientRepository.existsById(appointmentDTO.getPatientId())
+                || !doctorRepository.existsById(appointmentDTO.getDoctorId())
+        ) {
+            throw new ResourceNotFoundException("Doctor or patient id is not found");
+        }
 
         /*
         If any appointment has a conflict then return conflict
          */
         if (Boolean.TRUE.equals(hasAppointmentConflict(appointment))){
-            return HttpStatus.CONFLICT;
+            throw new AppointmentConflictException("Appointment has conflict");
         }
 
         appointmentRepository.save(appointment);
@@ -57,6 +64,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getFilteredAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId) {
         //TODO: Throw error if atleast one id is not entered
+        if (patientId.isEmpty() && doctorId.isEmpty()) {
+            throw new ResourceNotFoundException("No patient or doctor id specified");
+        }
 
         //Add the date filter if client added in req param
         Specification<Appointment> appointmentSpecification =
@@ -81,19 +91,19 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public HttpStatus updateAppointment(Long appointmentId, AppointmentDTO appointmentDTO) {
 
-        //TODO: Sanitize input
         Appointment updatedAppointment = appointmentMapper.toEntity(appointmentDTO);
 
 
         //TODO: Add exception handling when id is not found
-        Appointment appointment = appointmentRepository.findById(appointmentId).get();
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment with id " + appointmentId + " does not exist"));
 
 
         //Update Values in the object if not null
         appointment.updateObject(updatedAppointment);
 
         if (Boolean.TRUE.equals(hasAppointmentConflict(appointment))){
-            return HttpStatus.CONFLICT;
+            throw new AppointmentConflictException("Appointment has conflict");
         }
 
 
@@ -105,7 +115,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private Boolean hasAppointmentConflict(Appointment appointment) {
 
-        //TODO: Throw Exception if not exists
         List<Appointment> patientAppointments = appointmentRepository.findByPatient(appointment.getPatient());
         List<Appointment> doctorAppointments = appointmentRepository.findByDoctor(appointment.getDoctor());
 

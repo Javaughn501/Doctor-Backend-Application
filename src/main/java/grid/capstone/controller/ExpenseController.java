@@ -3,6 +3,7 @@ package grid.capstone.controller;
 import grid.capstone.dto.v1.ExpenseDTO;
 import grid.capstone.model.Expense;
 import grid.capstone.service.expense.ExpenseService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class ExpenseController {
     @PostMapping("/{patientId}")
     public ResponseEntity<HttpStatus> createExpense(
             @PathVariable Long patientId,
-            @RequestBody ExpenseDTO expenseDTO
+            @Valid @RequestBody ExpenseDTO expenseDTO
     ) {
         return ResponseEntity
                 .status(expenseService.createExpense(patientId, expenseDTO))

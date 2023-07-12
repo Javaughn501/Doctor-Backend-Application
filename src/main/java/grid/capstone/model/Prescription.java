@@ -2,6 +2,8 @@ package grid.capstone.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +28,13 @@ public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String medication;
+
+    @FutureOrPresent(message = "Start date cannot be in the past")
     private LocalDate startDate;
+
+    @Future(message = "End Date Should be in the future")
     private LocalDate endDate;
     private Integer dosage;
     private BigDecimal total;

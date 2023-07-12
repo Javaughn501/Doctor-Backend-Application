@@ -3,9 +3,12 @@ package grid.capstone.controller;
 import grid.capstone.dto.v1.AppointmentDTO;
 import grid.capstone.model.Appointment;
 import grid.capstone.service.appointment.AppointmentService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -17,6 +20,7 @@ import java.util.Optional;
  * @since 20/06/2023
  */
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/appointments")
 public class AppointmentController {
@@ -28,7 +32,7 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+    public ResponseEntity<HttpStatus> createAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
         return ResponseEntity
                 .status(appointmentService.createAppointment(appointmentDTO))
                 .build();
@@ -36,6 +40,7 @@ public class AppointmentController {
 
     @GetMapping
     public List<Appointment> getFilteredAppointments(
+            @PastOrPresent
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate>  dateFilter,
             @RequestParam Optional<Long> patientId,
             @RequestParam Optional<Long> doctorId
@@ -46,7 +51,7 @@ public class AppointmentController {
     @PutMapping("/{appointmentId}")
     public ResponseEntity<HttpStatus> updateAppointment(
             @PathVariable Long appointmentId,
-            @RequestBody AppointmentDTO appointmentDTO
+            @Valid @RequestBody AppointmentDTO appointmentDTO
     ) {
         return ResponseEntity
                 .status(appointmentService.updateAppointment(appointmentId, appointmentDTO))
