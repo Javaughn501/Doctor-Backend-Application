@@ -1,6 +1,6 @@
 package grid.capstone.controller;
 
-import grid.capstone.dto.v1.PatientDTO;
+import grid.capstone.dto.v1.PatientSignUp;
 import grid.capstone.model.Patient;
 import grid.capstone.service.patient.PatientService;
 import jakarta.validation.Valid;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Javaughn Stephenson
@@ -36,12 +37,12 @@ public class PatientController {
         return patientService.getPatient(patientId);
     }
 
-    @PostMapping("/{doctorId}")
-    public ResponseEntity<HttpStatus> postPatient(@PathVariable Long doctorId,
-                                                  @Valid @RequestBody PatientDTO patientDTO
+    @PostMapping
+    public ResponseEntity<HttpStatus> savePatient(@RequestParam(required = false) Optional<Long> doctorId,
+                                                  @Valid @RequestBody PatientSignUp patientSignUp
                                                   ) {
         return ResponseEntity
-                .status(patientService.savePatient(patientDTO, doctorId))
+                .status(patientService.savePatient(patientSignUp, doctorId))
                 .build();
     }
 

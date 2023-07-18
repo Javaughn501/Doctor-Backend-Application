@@ -1,10 +1,12 @@
 package grid.capstone.controller;
 
 import grid.capstone.dto.v1.DoctorDTO;
+import grid.capstone.dto.v1.DoctorSignUp;
 import grid.capstone.model.Doctor;
 import grid.capstone.service.doctor.DoctorService;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +19,7 @@ import java.util.Optional;
 
 @Validated
 @RestController
-@RequestMapping("api/v1/doctors")
+@RequestMapping("/api/v1/doctors")
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -39,6 +41,13 @@ public class DoctorController {
         return doctorService.getAllDoctors(
                 specialization, department, name, size, page
         );
+    }
+
+    @PostMapping
+    public HttpStatus saveDoctor(@RequestBody DoctorSignUp doctorSignUp) {
+
+        return doctorService.saveDoctor(doctorSignUp);
+
     }
 
     @GetMapping("/{doctorId}")

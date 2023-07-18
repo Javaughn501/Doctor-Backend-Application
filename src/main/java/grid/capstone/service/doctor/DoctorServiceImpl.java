@@ -1,14 +1,19 @@
 package grid.capstone.service.doctor;
 
 import grid.capstone.dto.v1.DoctorDTO;
+import grid.capstone.dto.v1.DoctorSignUp;
 import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.DoctorMapper;
 import grid.capstone.model.Doctor;
+import grid.capstone.model.Role;
 import grid.capstone.repository.DoctorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,16 +24,16 @@ import java.util.Optional;
  */
 
 @Service
+@RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
 
     private final DoctorMapper doctorMapper;
 
-    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorMapper doctorMapper) {
-        this.doctorRepository = doctorRepository;
-        this.doctorMapper = doctorMapper;
-    }
+    private final PasswordEncoder passwordEncoder;
+
+
 
     @Override
     public Doctor getDoctor(Long doctorId) {
@@ -61,5 +66,22 @@ public class DoctorServiceImpl implements DoctorService {
 
         Page<Doctor> doctorPage = doctorRepository.findAll(doctorSpecification, pageable);
         return doctorPage.map(doctorMapper::toDTO);
+    }
+
+    @Override
+    public HttpStatus saveDoctor(DoctorSignUp doctorSignUp) {
+        if (doctorRepository.existsByEmail(doctorSignUp.getEmail())) {
+            throw new ResourceNotFoundException("Email already exists");
+        }
+
+
+        Doctor doctor = doctorMapper.toEntity(doctorSignUp);
+        doctor.setPassword(passwordEncoder.encode(doctorSignUp.getPassword()));
+        doctor.setRole(Role.ROLE_DOCTOR);
+
+        doctorRepository.save(doctor);
+
+
+        return HttpStatus.CREATED;
     }
 }

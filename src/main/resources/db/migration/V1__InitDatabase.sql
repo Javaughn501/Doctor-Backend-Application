@@ -3,10 +3,14 @@ CREATE TABLE doctor (
     username VARCHAR (50),
     email VARCHAR(100),
     phone_number VARCHAR(10),
+    address VARCHAR (100),
     specialization VARCHAR(30),
+    age INTEGER,
     skills VARCHAR(30) ARRAY,
     biography TEXT,
-    department VARCHAR(40)
+    department VARCHAR(40),
+    role VARCHAR(20),
+    password TEXT NOT NULL
 );
 
 CREATE TABLE patient (
@@ -22,6 +26,8 @@ CREATE TABLE patient (
     gender CHAR(1),
     marital_status VARCHAR(10),
     description TEXT,
+    role VARCHAR(10),
+    password TEXT NOT NULL,
     doctor_id BIGSERIAL
 );
 

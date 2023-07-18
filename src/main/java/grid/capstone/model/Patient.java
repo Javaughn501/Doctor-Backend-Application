@@ -1,9 +1,14 @@
 package grid.capstone.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Patient {
+public class Patient implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,6 +54,13 @@ public class Patient {
     @Size(max = 100, message = "Description should be at most 100 characters")
     private String description;
 
+    @JsonIgnore
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    private Role role;
+
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
@@ -58,4 +70,34 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<MedicalRecord> medicalRecords;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

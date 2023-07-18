@@ -36,7 +36,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> getPatientExpenses(Long patientId) {
         //TODO: Throw exception when id is not found
-        if (patientRepository.existsById(patientId)) {
+        if (!patientRepository.existsById(patientId)) {
             throw new ResourceNotFoundException("Patient with id " + patientId + " does not exist");
         }
 

@@ -1,10 +1,11 @@
 package grid.capstone.repository;
 
 import grid.capstone.model.Doctor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * @author Javaughn Stephenson
@@ -13,4 +14,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long>, JpaSpecificationExecutor<Doctor> {
+    Optional<Doctor> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

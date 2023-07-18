@@ -1,6 +1,6 @@
 package grid.capstone.mapper;
 
-import grid.capstone.dto.v1.PatientDTO;
+import grid.capstone.dto.v1.PatientSignUp;
 import grid.capstone.model.Patient;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -15,7 +15,7 @@ public interface PatientMapper {
 
     PatientMapper INSTANCE = Mappers.getMapper(PatientMapper.class);
 
-    Patient toEntity(PatientDTO patientDTO);
+    Patient toEntity(PatientSignUp patientSignUp);
 
-    PatientDTO toDTO(Patient patient);
+    PatientSignUp toDTO(Patient patient);
 }

@@ -15,7 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PatientDTO {
+public class PatientSignUp {
+    @NotEmpty(message = "Password must not be empty")
+    @Size(min = 8, message = "Password must be greater than 8 characters")
+    private String password;
+
     @NotBlank(message = "Username is required")
     private String username;
 
