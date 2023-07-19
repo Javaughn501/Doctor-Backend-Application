@@ -48,7 +48,7 @@ class ExpenseServiceImplTest {
         expenseService = new ExpenseServiceImpl(expenseRepository, expenseMapper, patientRepository);
 
         testPatient = Patient.builder()
-                .username("test")
+                .name("test")
                 .email("test@email.com")
                 .build();
 

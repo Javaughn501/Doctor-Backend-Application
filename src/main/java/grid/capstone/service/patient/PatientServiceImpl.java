@@ -49,6 +49,9 @@ public class PatientServiceImpl implements PatientService {
         //Mapping the DTO to the entity and setting the doctor
         //to the entity
         Patient patient = patientMapper.toEntity(patientSignUp);
+
+        System.out.println(patient);
+
         patient.setPassword(passwordEncoder.encode(patientSignUp.getPassword()));
         patient.setRole(Role.ROLE_PATIENT);
 

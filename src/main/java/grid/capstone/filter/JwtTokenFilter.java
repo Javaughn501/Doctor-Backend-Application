@@ -34,10 +34,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("REACH FILTER");
         //Get Auth Header
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (null == authHeader || !authHeader.startsWith("Bearer ")) {
+            System.out.println("NO HEADER");
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,6 +49,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         //Check if JWT token is not valid
         if (!jwtService.isTokenValid(token)) {
+            System.out.println("TOKEN NO VALID");
             filterChain.doFilter(request, response);
             return;
         }
@@ -71,6 +74,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             //Updating the security context with the authenticated user
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            System.out.println(SecurityContextHolder.getContext().getAuthentication());
 
             filterChain.doFilter(request, response);
 

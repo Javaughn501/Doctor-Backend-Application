@@ -21,7 +21,7 @@ public class PatientSignUp {
     private String password;
 
     @NotBlank(message = "Username is required")
-    private String username;
+    private String name;
 
     @NotBlank(message = "Address is required")
     private String address;
@@ -43,8 +43,7 @@ public class PatientSignUp {
     private String occupation;
 
     @NotNull(message = "Gender is required")
-    @Pattern(regexp = "[MF]", message = "Gender should be 'M' or 'F'")
-    private String gender;
+    private Character gender;
 
     private String maritalStatus;
 

@@ -1,6 +1,6 @@
 CREATE TABLE doctor (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    username VARCHAR (50),
+    name VARCHAR (50),
     email VARCHAR(100),
     phone_number VARCHAR(10),
     address VARCHAR (100),
@@ -15,7 +15,7 @@ CREATE TABLE doctor (
 
 CREATE TABLE patient (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    username VARCHAR(50),
+    name VARCHAR(50),
     address VARCHAR (100),
     phone_number VARCHAR(10),
     email VARCHAR (50),
@@ -26,7 +26,7 @@ CREATE TABLE patient (
     gender CHAR(1),
     marital_status VARCHAR(10),
     description TEXT,
-    role VARCHAR(10),
+    role VARCHAR(20),
     password TEXT NOT NULL,
     doctor_id BIGSERIAL
 );

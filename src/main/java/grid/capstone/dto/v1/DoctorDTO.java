@@ -22,7 +22,7 @@ public class DoctorDTO implements Serializable {
     private Long id;
 
     @NotBlank(message = "Username is required")
-    private String username;
+    private String name;
 
     @NotBlank(message = "Department is required")
     private String department;

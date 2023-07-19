@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("api/v1/patients")
+@RequestMapping("/api/v1/patients")
 public class PatientController {
 
     private final PatientService patientService;
@@ -41,6 +41,8 @@ public class PatientController {
     public ResponseEntity<HttpStatus> savePatient(@RequestParam(required = false) Optional<Long> doctorId,
                                                   @Valid @RequestBody PatientSignUp patientSignUp
                                                   ) {
+
+        System.out.println(patientSignUp);
         return ResponseEntity
                 .status(patientService.savePatient(patientSignUp, doctorId))
                 .build();

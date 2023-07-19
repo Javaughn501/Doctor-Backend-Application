@@ -29,7 +29,7 @@ public class Doctor implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Username is required")
-    private String username;
+    private String name;
 
     @Email(message = "Invalid email address")
     private String email;

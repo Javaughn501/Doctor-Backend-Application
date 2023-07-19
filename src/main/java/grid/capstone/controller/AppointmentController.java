@@ -4,7 +4,6 @@ import grid.capstone.dto.v1.AppointmentDTO;
 import grid.capstone.model.Appointment;
 import grid.capstone.service.appointment.AppointmentService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,8 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO) {
+    public ResponseEntity<HttpStatus> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+        System.out.println(appointmentDTO);
         return ResponseEntity
                 .status(appointmentService.createAppointment(appointmentDTO))
                 .build();
@@ -40,7 +40,6 @@ public class AppointmentController {
 
     @GetMapping
     public List<Appointment> getFilteredAppointments(
-            @PastOrPresent
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate>  dateFilter,
             @RequestParam Optional<Long> patientId,
             @RequestParam Optional<Long> doctorId

@@ -31,7 +31,7 @@ public class DoctorSignUp {
     private String password;
 
     @NotBlank(message = "Username is required")
-    private String username;
+    private String name;
 
     @Email(message = "Invalid email address")
     private String email;
@@ -49,7 +49,6 @@ public class DoctorSignUp {
     private Integer age;
 
     @NotNull(message = "Gender is required")
-    @Pattern(regexp = "[MF]", message = "Gender should be 'M' or 'F'")
     private Character gender;
 
 

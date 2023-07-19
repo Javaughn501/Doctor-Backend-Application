@@ -5,9 +5,13 @@ import grid.capstone.exception.AppointmentConflictException;
 import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.AppointmentMapper;
 import grid.capstone.model.Appointment;
+import grid.capstone.model.Doctor;
+import grid.capstone.model.Patient;
 import grid.capstone.repository.AppointmentRepository;
 import grid.capstone.repository.DoctorRepository;
 import grid.capstone.repository.PatientRepository;
+import grid.capstone.service.mail.EmailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,30 +27,28 @@ import java.util.Optional;
  */
 
 @Service
+@RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentMapper appointmentMapper;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+    private final EmailService emailService;
 
-    public AppointmentServiceImpl(AppointmentMapper appointmentMapper, PatientRepository patientRepository, DoctorRepository doctorRepository, AppointmentRepository appointmentRepository) {
-        this.appointmentMapper = appointmentMapper;
-        this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
-        this.appointmentRepository = appointmentRepository;
-    }
 
     @Override
     public HttpStatus createAppointment(AppointmentDTO appointmentDTO) {
 
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
 
-        if (!patientRepository.existsById(appointmentDTO.getPatientId())
-                || !doctorRepository.existsById(appointmentDTO.getDoctorId())
-        ) {
-            throw new ResourceNotFoundException("Doctor or patient id is not found");
-        }
+        System.out.println(appointment);
+
+        Patient patient = patientRepository.findById(appointmentDTO.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient with id " + appointmentDTO.getPatientId() + "is not found"));
+
+        Doctor doctor = doctorRepository.findById(appointmentDTO.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor with id " + appointmentDTO.getDoctorId() + "is not found"));
 
         /*
         If any appointment has a conflict then return conflict
@@ -55,7 +57,13 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new AppointmentConflictException("Appointment has conflict");
         }
 
-        appointmentRepository.save(appointment);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        emailService.sendAppointmentEmail(
+                savedAppointment,
+                doctor,
+                patient
+        );
 
         return HttpStatus.CREATED;
     }
@@ -63,7 +71,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> getFilteredAppointments(Optional<LocalDate> dateFilter, Optional<Long> patientId, Optional<Long> doctorId) {
-        //TODO: Throw error if atleast one id is not entered
         if (patientId.isEmpty() && doctorId.isEmpty()) {
             throw new ResourceNotFoundException("No patient or doctor id specified");
         }
@@ -108,6 +115,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
         appointmentRepository.save(appointment);
+
+        emailService.sendAppointmentEmail(
+                appointment,
+                appointment.getDoctor(),
+                appointment.getPatient()
+        );
 
         return HttpStatus.OK;
     }

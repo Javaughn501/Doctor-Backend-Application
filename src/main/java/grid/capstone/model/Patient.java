@@ -28,7 +28,7 @@ public class Patient implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Username is required")
-    private String username;
+    private String name;
 
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
@@ -46,10 +46,12 @@ public class Patient implements UserDetails {
     private String occupation;
 
     @NotNull(message = "Gender is required")
-    @Pattern(regexp = "[MF]", message = "Gender should be 'M' or 'F'")
     private Character gender;
 
     private String maritalStatus;
+
+    @NotBlank(message = "Address is required")
+    private String address;
 
     @Size(max = 100, message = "Description should be at most 100 characters")
     private String description;
