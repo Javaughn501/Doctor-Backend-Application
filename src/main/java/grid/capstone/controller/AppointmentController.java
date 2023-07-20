@@ -32,7 +32,6 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-        System.out.println(appointmentDTO);
         return ResponseEntity
                 .status(appointmentService.createAppointment(appointmentDTO))
                 .build();

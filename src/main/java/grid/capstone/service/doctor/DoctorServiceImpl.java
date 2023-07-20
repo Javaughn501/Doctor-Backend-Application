@@ -5,7 +5,6 @@ import grid.capstone.dto.v1.DoctorSignUp;
 import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.DoctorMapper;
 import grid.capstone.model.Doctor;
-import grid.capstone.model.Role;
 import grid.capstone.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -77,7 +76,6 @@ public class DoctorServiceImpl implements DoctorService {
 
         Doctor doctor = doctorMapper.toEntity(doctorSignUp);
         doctor.setPassword(passwordEncoder.encode(doctorSignUp.getPassword()));
-        doctor.setRole(Role.ROLE_DOCTOR);
 
         doctorRepository.save(doctor);
 

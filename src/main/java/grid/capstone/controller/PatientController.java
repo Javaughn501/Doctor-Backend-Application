@@ -42,7 +42,6 @@ public class PatientController {
                                                   @Valid @RequestBody PatientSignUp patientSignUp
                                                   ) {
 
-        System.out.println(patientSignUp);
         return ResponseEntity
                 .status(patientService.savePatient(patientSignUp, doctorId))
                 .build();

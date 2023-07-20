@@ -52,7 +52,7 @@ public class Doctor implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @JsonIgnore
-    private Role role;
+    private final Role role = Role.ROLE_DOCTOR;
 
     @NotNull(message = "Skills list is required")
     @Size(min = 1, message = "Doctor's skills list must have at least one skill")
@@ -60,6 +60,7 @@ public class Doctor implements UserDetails {
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Availability> availabilities;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

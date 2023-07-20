@@ -61,7 +61,7 @@ public class Patient implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @JsonIgnore
-    private Role role;
+    private final Role role = Role.ROLE_PATIENT;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")

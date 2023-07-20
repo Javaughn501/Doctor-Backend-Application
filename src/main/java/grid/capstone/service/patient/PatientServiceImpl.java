@@ -5,7 +5,6 @@ import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.PatientMapper;
 import grid.capstone.model.Doctor;
 import grid.capstone.model.Patient;
-import grid.capstone.model.Role;
 import grid.capstone.repository.DoctorRepository;
 import grid.capstone.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +48,8 @@ public class PatientServiceImpl implements PatientService {
         //Mapping the DTO to the entity and setting the doctor
         //to the entity
         Patient patient = patientMapper.toEntity(patientSignUp);
-
-        System.out.println(patient);
-
         patient.setPassword(passwordEncoder.encode(patientSignUp.getPassword()));
-        patient.setRole(Role.ROLE_PATIENT);
+
 
         //Check if doctor exists
         if (doctorId.isPresent()) {

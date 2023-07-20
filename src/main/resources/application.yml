@@ -25,3 +25,6 @@ spring:
 
 flyway:
   locations: classpath:db/migration
+
+jwt:
+  secret: "10b1c60213f53f6a83a0c4e48f59d5b2f80a4c3da5e38c49d96bacf9014dff6a"

@@ -25,8 +25,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthRequest authRequest) {
 
-        System.out.println("Made it in");
-
         // Set the token in the response header
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + authService.login(authRequest));
