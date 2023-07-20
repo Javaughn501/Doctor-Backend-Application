@@ -1,6 +1,7 @@
 package grid.capstone.service.appointment;
 
 import grid.capstone.dto.v1.AppointmentDTO;
+import grid.capstone.exception.AppointmentConflictException;
 import grid.capstone.exception.ResourceNotFoundException;
 import grid.capstone.mapper.AppointmentMapper;
 import grid.capstone.model.Appointment;
@@ -19,6 +20,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -171,7 +174,11 @@ class AppointmentServiceImplTest {
         Long appointmentId = 1L;
 
         // Stubbing the AppointmentMapper's toEntity method to return an updated appointment
-        Appointment updatedAppointment = new Appointment();
+        Appointment updatedAppointment = Appointment.builder()
+                .appointmentDate(LocalDate.now().plusDays(5))
+                .build();
+
+
         given(appointmentMapper.toEntity(appointmentDTO))
                 .willReturn(updatedAppointment);
 
@@ -208,6 +215,58 @@ class AppointmentServiceImplTest {
 
         // Verify that HttpStatus.OK is returned
         assertThat(result).isEqualTo(HttpStatus.OK);
+    }
+
+
+
+    @Test
+    void testCreateAppointment_AppointmentClashes_ThrowsAppointmentConflictException() {
+        //Arrange
+        AppointmentDTO appointmentDTO = new AppointmentDTO();
+        appointmentDTO.setPatientId(1L);
+        appointmentDTO.setDoctorId(2L);
+        appointmentDTO.setAppointmentDate(LocalDate.of(2023, 7, 25));
+        appointmentDTO.setStartTime(LocalTime.of(10, 0));
+        appointmentDTO.setEndTime(LocalTime.of(11, 0));
+
+        Patient patient = new Patient();
+        patient.setId(1L);
+
+        Doctor doctor = new Doctor();
+        doctor.setId(2L);
+
+        Appointment appointment = new Appointment();
+        appointment.setId(1L);
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(LocalDate.of(2023, 7, 25));
+        appointment.setStartTime(LocalTime.of(9, 0));
+        appointment.setEndTime(LocalTime.of(10, 30));
+
+        Appointment appointment1 = new Appointment();
+        appointment1.setId(2L);
+        appointment1.setPatient(patient);
+        appointment1.setDoctor(doctor);
+        appointment1.setAppointmentDate(LocalDate.of(2023, 7, 25));
+        appointment1.setStartTime(LocalTime.of(9, 0));
+        appointment1.setEndTime(LocalTime.of(10, 30));
+
+        List<Appointment> patientAppointments = new ArrayList<>();
+        patientAppointments.add(appointment1);
+
+        List<Appointment> doctorAppointments = new ArrayList<>();
+        doctorAppointments.add(appointment1);
+
+        given(appointmentMapper.toEntity(appointmentDTO)).willReturn(appointment);
+        given(patientRepository.findById(1L)).willReturn(Optional.of(patient));
+        given(doctorRepository.findById(2L)).willReturn(Optional.of(doctor));
+        given(appointmentRepository.findByPatient(patient)).willReturn(patientAppointments);
+        given(appointmentRepository.findByDoctor(doctor)).willReturn(doctorAppointments);
+
+        // Act & Assert
+        assertThrows(AppointmentConflictException.class, () -> {
+            appointmentService.createAppointment(appointmentDTO);
+        });
     }
 
 

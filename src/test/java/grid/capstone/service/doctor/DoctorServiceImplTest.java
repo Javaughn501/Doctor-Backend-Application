@@ -173,4 +173,16 @@ class DoctorServiceImplTest {
         assertThat(httpStatus).isEqualTo(HttpStatus.CREATED);
 
     }
+
+    @Test
+    void testSaveDoctor_DuplicateEmail_ThrowsResourceNotFoundException() {
+        // Arrange
+        DoctorSignUp doctorSignUp = new DoctorSignUp();
+        // Set properties in doctorSignUp as needed
+
+        given(doctorRepository.existsByEmail(doctorSignUp.getEmail())).willReturn(true);
+
+        // Act and Assert
+        assertThrows(ResourceNotFoundException.class, () -> doctorService.saveDoctor(doctorSignUp));
+    }
 }

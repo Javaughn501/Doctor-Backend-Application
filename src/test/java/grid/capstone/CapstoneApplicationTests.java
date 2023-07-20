@@ -1,17 +1,14 @@
 package grid.capstone;
-//
-//import org.junit.jupiter.api.Test;
-////import org.springframework.boot.test.context.SpringBootTest;
-////import org.springframework.context.ApplicationContext;
-////
-////import static org.assertj.core.api.Assertions.assertThat;
-////
-////@SpringBootTest
-////class CapstoneApplicationTests {
-////
-////	@Test
-////    void contextLoads(ApplicationContext context) {
-////        assertThat(context).isNotNull();
-////    }
-////
-////}
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class CapstoneApplicationTests {
+
+	@Test
+    void contextLoads() {
+
+    }
+
+}

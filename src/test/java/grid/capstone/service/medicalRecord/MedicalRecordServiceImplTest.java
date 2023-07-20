@@ -6,6 +6,7 @@ import grid.capstone.mapper.MedicalRecordMapper;
 import grid.capstone.mapper.MedicalRecordMapperImpl;
 import grid.capstone.model.Appointment;
 import grid.capstone.model.MedicalRecord;
+import grid.capstone.model.Prescription;
 import grid.capstone.repository.AppointmentRepository;
 import grid.capstone.repository.MedicalRecordRepository;
 import grid.capstone.repository.PatientRepository;
@@ -16,13 +17,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -61,7 +63,15 @@ class MedicalRecordServiceImplTest {
 
         testMedicalDTO = MedicalRecordDTO.builder()
                 .appointmentId(1L)
-                .prescriptions(new ArrayList<>())
+                .prescriptions(List.of(
+                        Prescription.builder()
+                                .medication("Medication")
+                                .dosage(1)
+                                .total(BigDecimal.valueOf(123L))
+                                .startDate(LocalDate.now())
+                                .endDate(LocalDate.now())
+                                .build()
+                ))
                 .build();
 
     }
@@ -79,6 +89,18 @@ class MedicalRecordServiceImplTest {
 
         then(medicalRepository).should(times(1)).findAllByPatientId(1L);
         assertThat(medicalRecords).isEqualTo(List.of(testMedicalRecord));
+    }
+
+    @Test
+    public void testGetMedicalRecordsThrowsResourceNotFoundException() {
+        // Arrange
+        Long nonExistentPatientId = 100L;
+        given(patientRepository.existsById(nonExistentPatientId)).willReturn(false);
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            medicalRecordService.getMedicalRecords(nonExistentPatientId);
+        });
     }
 
     @Test
@@ -101,5 +123,25 @@ class MedicalRecordServiceImplTest {
         then(medicalRepository).should(times(1)).save(any(MedicalRecord.class));
         then(appointmentRepository).should(times(1)).save(any(Appointment.class));
         assertThat(status).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
+    public void testCreateMedicalRecordThrowsResourceNotFoundException() {
+        // Arrange
+        Long nonExistentAppointmentId = 100L;
+        MedicalRecordDTO medicalRecordDTO = new MedicalRecordDTO();
+        medicalRecordDTO.setAppointmentId(2L);
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setAppointment(Appointment.builder()
+                        .id(1L)
+                .build());
+
+        given(appointmentRepository.findById(anyLong())).willReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            medicalRecordService.createMedicalRecord(1L, medicalRecordDTO);
+        });
     }
 }
