@@ -4,7 +4,6 @@ import grid.capstone.dto.v1.DoctorDTO;
 import grid.capstone.dto.v1.DoctorSignUp;
 import grid.capstone.model.Doctor;
 import grid.capstone.service.doctor.DoctorService;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -30,9 +29,7 @@ public class DoctorController {
 
     @GetMapping
     Page<DoctorDTO> getAllDoctors(
-            @Pattern(regexp = "/^[A-Za-z]+$/", message = "Contain only alphabets")
             @RequestParam Optional<String> specialization,
-            @Pattern(regexp = "/^[A-Za-z]+$/", message = "Contain only alphabets")
             @RequestParam Optional<String> department,
             @RequestParam Optional<String> name,
             @RequestParam(defaultValue = "10") Integer size,
@@ -44,6 +41,7 @@ public class DoctorController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public HttpStatus saveDoctor(@RequestBody DoctorSignUp doctorSignUp) {
 
         return doctorService.saveDoctor(doctorSignUp);

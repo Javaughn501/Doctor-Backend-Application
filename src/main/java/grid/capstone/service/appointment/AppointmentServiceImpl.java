@@ -42,8 +42,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
 
-        System.out.println(appointment);
-
         Patient patient = patientRepository.findById(appointmentDTO.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient with id " + appointmentDTO.getPatientId() + "is not found"));
 

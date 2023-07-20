@@ -39,7 +39,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     @Override
     public List<MedicalRecord> getMedicalRecords(Long patientId) {
         //TODO: Throw Exception when id doesnt exists
-        if (patientRepository.existsById(patientId)) {
+        if (!patientRepository.existsById(patientId)) {
             throw new ResourceNotFoundException("Patient with id " + patientId + " does not exist");
         }
 

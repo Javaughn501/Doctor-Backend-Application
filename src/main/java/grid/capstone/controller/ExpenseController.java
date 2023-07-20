@@ -31,6 +31,7 @@ public class ExpenseController {
     }
 
     @PostMapping("/{patientId}")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<HttpStatus> createExpense(
             @PathVariable Long patientId,
             @Valid @RequestBody ExpenseDTO expenseDTO
@@ -46,6 +47,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{expenseId}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<HttpStatus> updateExpense(
             @PathVariable Long expenseId,
             @RequestBody Expense expense
