@@ -4,6 +4,7 @@ import grid.capstone.dto.v1.AppointmentDTO;
 import grid.capstone.model.Appointment;
 import grid.capstone.service.appointment.AppointmentService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Validated
 @RestController
 @RequestMapping("/api/v1/appointments")
+@Slf4j
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
@@ -32,6 +34,9 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
+
+        log.info("Appointment = {}", appointmentDTO);
+
         return ResponseEntity
                 .status(appointmentService.createAppointment(appointmentDTO))
                 .build();
