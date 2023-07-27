@@ -89,6 +89,8 @@ class AuthServiceImplTest {
                 .willReturn(authentication);
 
         given(userDetailsService.loadUserByUsername(authRequest.getEmail())).willReturn(userDetails);
+
+        //TODO: test the actual method
         given(jwtService.generateToken(userDetails)).willReturn(expectedToken);
 
         // When

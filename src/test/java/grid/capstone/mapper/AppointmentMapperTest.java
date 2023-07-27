@@ -92,6 +92,7 @@ class AppointmentMapperTest {
 
     @Test
     public void testToEntity_NullInput() {
+
         // Arrange
         AppointmentMapper appointmentMapper = new AppointmentMapperImpl();
         AppointmentDTO appointmentDTO = null;

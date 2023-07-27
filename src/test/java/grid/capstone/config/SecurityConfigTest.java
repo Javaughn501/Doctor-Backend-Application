@@ -2,6 +2,7 @@ package grid.capstone.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import grid.capstone.dto.v1.DoctorSignUp;
+import grid.capstone.dto.v1.ExpenseDTO;
 import grid.capstone.dto.v1.PatientSignUp;
 import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @SpringBootTest
@@ -31,6 +33,7 @@ class SecurityConfigTest {
 
     PatientSignUp patientSignUp;
     DoctorSignUp doctorSignUp;
+    ExpenseDTO expenseDTO;
 
     @BeforeEach
     void setUp() {
@@ -57,11 +60,18 @@ class SecurityConfigTest {
                 .skills(List.of("Surgeon"))
                 .build();
 
+        expenseDTO = ExpenseDTO.builder()
+                .category("Category")
+                .description("Cat Description")
+                .name("Expense")
+                .amount(BigDecimal.valueOf(123L))
+                .build();
+
     }
 
     @Test
     @WithMockUser
-    public void testCsrfIgnoreForDoctorEndpoint() throws Exception {
+    public void testSignUpForDoctorEndpoint() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/doctors")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(doctorSignUp))
@@ -71,7 +81,7 @@ class SecurityConfigTest {
 
     @Test
     @WithMockUser
-    public void testCsrfIgnoreForPatientEndpoint() throws Exception {
+    public void testSignUpForPatientEndpoint() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/patients")
                         .param("doctorId", "1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,8 +92,30 @@ class SecurityConfigTest {
 
     @Test
     @WithMockUser
-    public void testCsrfProtectionForOtherEndpoints() throws Exception {
+    public void testProtectionForOtherEndpointsNeedsValidUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/patients"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    public void testEndpointWithRoleBasedAccess_CorrectRole() throws Exception {
+    //Test endpoint where patient is accepted so return ok status
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/patients")
+                        .param("doctorId", "1")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser(roles = "PATIENT")
+    public void testEndpointWhereRoleIsNotAccepted_IncorrectRole() throws Exception {
+    //Test endpoint where expecting DOCTOR role so return forbidden
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/expenses/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(expenseDTO))
+                )
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
