@@ -407,14 +407,14 @@ paths:
 
 
   #Medical API
-  /medical-record/{patientId}:
+  /medical-record:
     get:
       tags:
         - Medical Record
       summary: Returns a patient medical records
       parameters:
         - name: patientId
-          in: path
+          in: query
           required: true
           schema:
             type: integer
@@ -451,6 +451,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+
+  /medical-record/{patientId}:
     post:
       tags:
         - Medical Record
@@ -471,6 +473,52 @@ paths:
           description: Record successfully created
         404:
           description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+        401:
+          description: Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+
+
+  /medical-record/{appointmentId}:
+    get:
+      tags:
+        - Medical Record
+      summary: Returns a patient medical record for an appointment
+      parameters:
+        - name: appointmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully returns a patient medical records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  medical_record:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/medical_record'
+        404:
+          description: Patient with id not found
           content:
             application/json:
               schema:
@@ -1017,7 +1065,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/prescription'
-        
-        
-        
-  
