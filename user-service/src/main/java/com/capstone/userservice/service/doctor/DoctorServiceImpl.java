@@ -3,6 +3,7 @@ package com.capstone.userservice.service.doctor;
 
 import com.capstone.userservice.dto.v1.DoctorDTO;
 import com.capstone.userservice.dto.v1.DoctorSignUp;
+import com.capstone.userservice.exception.ResourceExistsException;
 import com.capstone.userservice.exception.ResourceNotFoundException;
 import com.capstone.userservice.mapper.DoctorMapper;
 import com.capstone.userservice.model.Doctor;
@@ -78,7 +79,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         if (doctorRepository.existsById(userId)) {
             log.info("User already exists");
-            throw new ResourceNotFoundException("User already exists");
+            throw new ResourceExistsException("User already exists");
         }
 
         Doctor doctor = doctorMapper.toEntity(doctorSignUp);

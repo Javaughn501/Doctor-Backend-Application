@@ -1,6 +1,7 @@
 package com.capstone.userservice.controller;
 
 import com.capstone.userservice.dto.v1.ExceptionDTO;
+import com.capstone.userservice.exception.ResourceExistsException;
 import com.capstone.userservice.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,17 @@ public class ControllerAdvice {
         return ExceptionDTO.builder()
                 .status(HttpStatus.NOT_FOUND)
                 .message("Resource was not found")
+                .details(exception.getMessage())
+                .timestamp(LocalTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(ResourceExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionDTO resourceExistsException(ResourceExistsException exception) {
+        return ExceptionDTO.builder()
+                .status(HttpStatus.CONFLICT)
+                .message("Resource already exists")
                 .details(exception.getMessage())
                 .timestamp(LocalTime.now())
                 .build();

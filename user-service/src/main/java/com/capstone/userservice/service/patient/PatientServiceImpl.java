@@ -2,6 +2,7 @@ package com.capstone.userservice.service.patient;
 
 
 import com.capstone.userservice.dto.v1.PatientSignUp;
+import com.capstone.userservice.exception.ResourceExistsException;
 import com.capstone.userservice.exception.ResourceNotFoundException;
 import com.capstone.userservice.mapper.PatientMapper;
 import com.capstone.userservice.model.Doctor;
@@ -48,7 +49,7 @@ public class PatientServiceImpl implements PatientService {
 
         if (patientRepository.existsById(userId)) {
             log.info("Patient already exists");
-            throw new ResourceNotFoundException("Email already exists");
+            throw new ResourceExistsException("Email already exists");
         }
 
         //Mapping the DTO to the entity and setting the doctor
