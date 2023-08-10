@@ -238,8 +238,8 @@ services:
       retries: 4
 
     environment:
-      EMAIL: javaughn1075@gmail.com
-      PASSWORD: hllhkezkynqjxvro
+      EMAIL: 
+      PASSWORD: 
 
     ports:
       - "8085:8085"
